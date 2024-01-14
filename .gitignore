@@ -2,5 +2,8 @@
 *.bmp
 *.log
 models/*
+!models/.gitkeep
 runs/*
+!runs/.gitkeep
 logs/*
+!logs/.gitkeep
