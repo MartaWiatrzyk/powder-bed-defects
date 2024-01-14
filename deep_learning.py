@@ -247,7 +247,7 @@ def main():
 
     learning_rate = [0.01, 0.005, 0.001, 0.0005, 0.0001, 0.00005, 0.00001, 0.000005, 0.000001]
     for lr in learning_rate:
-        if model_type == 'resnet18' or 'resnet50':
+        if model_type == 'resnet18' or model_type == 'resnet50':
             if model_type == 'resnet18':
                 model = models.resnet18(pretrained=True).cuda()
             else:
