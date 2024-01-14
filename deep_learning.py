@@ -4,7 +4,7 @@ import os
 from sklearn.model_selection import train_test_split
 import torch.nn as nn
 from torch.utils.data import DataLoader
-from typing import Any
+from typing import Any, List, Tuple
 import time
 import logging
 import warnings
@@ -12,7 +12,7 @@ from torchvision import models
 from torch.utils.tensorboard import SummaryWriter
 
 
-def load_images(categories: list[str], input_dir: str) -> tuple[list, list]:
+def load_images(categories: List[str], input_dir: str) -> Tuple[list, list]:
     """
     Load images and converts to lists: flatten images and categories
     :param categories: labels for images (ok/ nok)
@@ -24,18 +24,19 @@ def load_images(categories: list[str], input_dir: str) -> tuple[list, list]:
     for i in categories:
         path = os.path.join(input_dir, i)
         for img in os.listdir(path):
-            image = cv2.imread(os.path.join(path, img), cv2.IMREAD_GRAYSCALE)  # mono
-            image_resized = cv2.resize(image, (300, 300), interpolation=cv2.INTER_AREA)
-            image_tensor = torch.tensor(image_resized, dtype=torch.float32)  # Convert to tensor
-            image_tensor = image_tensor.unsqueeze(0)
-            x_val.append(image_tensor)
-            y_val.append(categories.index(i))
+            if img != '.gitkeep':
+                image = cv2.imread(os.path.join(path, img), cv2.IMREAD_GRAYSCALE)  # mono
+                image_resized = cv2.resize(image, (300, 300), interpolation=cv2.INTER_AREA)
+                image_tensor = torch.tensor(image_resized, dtype=torch.float32)  # Convert to tensor
+                image_tensor = image_tensor.unsqueeze(0)
+                x_val.append(image_tensor)
+                y_val.append(categories.index(i))
 
     return x_val, y_val
 
 
-def prepare_data(categories: list[str], input_dir: str, test_size: float, batch_size: int) -> \
-        tuple[Any, Any, Any, int, Any, Any, Any, Any]:
+def prepare_data(categories: List[str], input_dir: str, test_size: float, batch_size: int) -> \
+        Tuple[Any, Any, Any, int, Any, Any, Any, Any]:
     """
     Convert arrays to dataframe and splits dataset into train and test sets
     :param batch_size: size of batch in train_loader and test_loader
@@ -171,7 +172,7 @@ def save_model(model: Any, filename: str):
     torch.save(model, save_path)
 
 
-def validate_model(filename: str, categories: list[str], val_dir: str, batch_size) -> float:
+def validate_model(filename: str, categories: List[str], val_dir: str, batch_size) -> float:
     """
     Validate trained model on validation set; load images from given directory, resize and get accuracy for each image
     and whole validation dataset

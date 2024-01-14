@@ -1,9 +1,10 @@
 import cv2
 import os
 import numpy as np
+from typing import List
 
 
-def find_min_radius(images_dir: str, categories: list[str]) -> int:
+def find_min_radius(images_dir: str, categories: List[str]) -> int:
     """
     Find minimum radius of 3d printer's table for given dataset
     :param categories: labels for images (ok/ nok)
@@ -33,7 +34,7 @@ def find_min_radius(images_dir: str, categories: list[str]) -> int:
     return min_radius
 
 
-def remove_background(images_dir: str, min_radius: int, preprocessed_dir: str, categories: list[str]) -> None:
+def remove_background(images_dir: str, min_radius: int, preprocessed_dir: str, categories: List[str]) -> None:
     """
     Remove background (leave only 3d printer's table)
     :param categories: labels for images (ok/ nok)

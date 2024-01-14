@@ -11,11 +11,11 @@ from sklearn.neighbors import KNeighborsClassifier
 import time
 import logging
 import pickle
-from typing import Any
+from typing import Any, List, Tuple
 import warnings
 
 
-def load_images(categories: list[str], input_dir: str) -> tuple[list, list]:
+def load_images(categories: List[str], input_dir: str) -> Tuple[list, list]:
     """
     Load images and converts to lists: flatten images and categories
     :param categories: labels for images (ok/ nok)
@@ -27,12 +27,13 @@ def load_images(categories: list[str], input_dir: str) -> tuple[list, list]:
     for i in categories:
         path = os.path.join(input_dir, i)
         for img in os.listdir(path):
-            image = cv2.imread(os.path.join(path, img))
-            image_resized = cv2.resize(image, (300, 300), interpolation=cv2.INTER_AREA)
-            image_mono = cv2.cvtColor(image_resized, cv2.COLOR_BGR2GRAY)
-            histogram, bin_edges = np.histogram(image_mono, bins=256, range=(0, 255))
-            x_val.append(histogram)
-            y_val.append(categories.index(i))
+            if img != '.gitkeep':
+                image = cv2.imread(os.path.join(path, img))
+                image_resized = cv2.resize(image, (300, 300), interpolation=cv2.INTER_AREA)
+                image_mono = cv2.cvtColor(image_resized, cv2.COLOR_BGR2GRAY)
+                histogram, bin_edges = np.histogram(image_mono, bins=256, range=(0, 255))
+                x_val.append(histogram)
+                y_val.append(categories.index(i))
     return x_val, y_val
 
 
@@ -60,7 +61,7 @@ def load_parameters(model_type: str) -> dict:
     return param_grid
 
 
-def prepare_data(categories: list[str], input_dir: str, test_size: float) -> tuple[Any, Any, Any, Any]:
+def prepare_data(categories: List[str], input_dir: str, test_size: float) -> Tuple[Any, Any, Any, Any]:
     """
     Convert arrays to dataframe and splits dataset into train and test sets
     :param input_dir: input data directory
@@ -111,7 +112,7 @@ def train_model(x_train: pd.DataFrame, y_train: pd.DataFrame, param: dict, model
     return best_model
 
 
-def test_model(x_test: pd.DataFrame, y_test: pd.DataFrame, model: Any, categories: list[str]) -> None:
+def test_model(x_test: pd.DataFrame, y_test: pd.DataFrame, model: Any, categories: List[str]) -> None:
     """
     Test the accuracy of trained model
     :param x_test: test set (flattened image data)
@@ -136,7 +137,7 @@ def save_model(model: Any, filename: str):
     pickle.dump(model, open(model_path, 'wb'))
 
 
-def validate_model(filename: str, categories: list[str], val_dir: str) -> float:
+def validate_model(filename: str, categories: List[str], val_dir: str) -> float:
     """
     Validate trained model on validation set; load images from given directory, resize and get accuracy for each image
     and whole validation dataset

@@ -7,3 +7,5 @@ runs/*
 !runs/.gitkeep
 logs/*
 !logs/.gitkeep
+venv
+.venv

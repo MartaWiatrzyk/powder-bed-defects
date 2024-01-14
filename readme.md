@@ -3,9 +3,16 @@ This project aims to classify images of powder bed used in the additive manufact
 
 
 ## Installation
-1. Use [env.yaml](env.yaml) file to create conda environment and install all required dependencies.
+To install all required dependencies:
+* Use [env.yaml](env.yaml) file to create conda environment (Windows and conda users)
 ```bash
 conda env create -vv -f env.yaml
+```
+or
+* Use [requirements.txt](requirements.txt) 
+
+```bash
+pip install -r requirements.txt
 ```
 
 ## Usage
